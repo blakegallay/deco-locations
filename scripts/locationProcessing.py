@@ -18,7 +18,7 @@ if __name__ == "__main__":
 	# CSV File containing list of all DECO event ID's and countries of origin
 	ids_countries = {}
 	try:
-		with open('/data/ids_countries.json') as data_file:	
+		with open('../data/ids_countries.json') as data_file:	
 			ids_countries = json.load(data_file)
 	except FileNotFoundError:
 		pass
@@ -29,12 +29,12 @@ if __name__ == "__main__":
 	#78e7d0d08860206c27e848a7bc4f1451 66ffcb477c3548c99085d0cf5e87954e KEYS
 
 	# The last indexed event ID - used to determine 'new'/'old' data
-	with open('/data/lastID.csv') as l:
+	with open('../data/lastID.csv') as l:
 		reader = csv.reader(l)
 		for row in reader:
 			lastID = row[0]
    
-	with open("/data/db_hourly.csv") as f:
+	with open("../data/db_hourly_safe.csv") as f:
 		csv_f = csv.reader(f)
 		dataTable = []
 		coordinates = []
@@ -44,7 +44,7 @@ if __name__ == "__main__":
 		withinEvents = []
 		cTime = datetime.datetime.now()
 		u = 0
-		with open('/data/binnedLocations.csv') as gridcoords: # List of binned latlon coordinates
+		with open('../data/binnedLocations.csv') as gridcoords: # List of binned latlon coordinates
 			reader = csv.reader(gridcoords)
 			for coordinate in reader:
 				coordinates.append(coordinate)
@@ -57,7 +57,7 @@ if __name__ == "__main__":
 						
 						#if((cTime - eventTime).total_seconds() < 1000000000):
 						if(True):
-							with open('/data/binnedCoordinates.csv') as cds:
+							with open('../data/binnedCoordinates.csv') as cds:
 								coordsreader = csv.reader(cds)
 								new = True
 								for coordinate in coordsreader:
@@ -65,7 +65,7 @@ if __name__ == "__main__":
 										# First level of binning - determines if event coordinates are within 0.1 degrees of an indexed grid point
 										if(float(row[12]) > float(coordinate[0]) - 1 and float(row[12]) < float(coordinate[0]) + 1 and float(row[13]) < float(coordinate[1]) + 1 and float(row[13]) > float(coordinate[1]) - 1):
 											new = False
-											with open('/data/binnedLocations.csv') as locations:
+											with open('../data/binnedLocations.csv') as locations:
 												reader2 = csv.reader(locations)
 												 
 												for r in reader2:
@@ -80,17 +80,17 @@ if __name__ == "__main__":
 						weekEvents.append(row)
 					ID = row[11]
 	lastID = ID
-	with open('/data/lastID.csv', 'w') as last: # Re-writes lastID
+	with open('../data/lastID.csv', 'w') as last: # Re-writes lastID
 		writer = csv.writer(last)
 		writer.writerow([lastID])
 		
-	with open("/data/contributingCountries.csv") as y: # List of DECO contributor countries
+	with open("../data/contributingCountries.csv") as y: # List of DECO contributor countries
 		csv_y = csv.reader(y)
 		countryTable = []
 		for row in csv_y:
 			countryTable += [row]
 	states = []
-	with open('/data/states.csv') as st: # US states
+	with open('../data/states.csv') as st: # US states
 		streader = csv.reader(st)
 		r = 0
 		for row in streader:
@@ -351,12 +351,12 @@ if __name__ == "__main__":
 	 #		   continue
 	 #	   pass
 	print("making binnedCoordinates.csv")
-	with open('/data/binnedLocations.csv', "w") as gcoords:
+	with open('../data/binnedLocations.csv', "w") as gcoords:
 		writ = csv.writer(gcoords)
 		for nextCoord in coordinates: 
 			writ.writerow(nextCoord)
 				
-	with open('/data/binnedCoordinates.csv','w') as gridcoords:
+	with open('../data/binnedCoordinates.csv','w') as gridcoords:
 		writer = csv.writer(gridcoords)
 		for coord in coordinates:
 			if(len(coord)!=0):
@@ -370,7 +370,7 @@ if __name__ == "__main__":
 	sorted_countries = sorted(reversed_countries, reverse=True)
 	
 	print("makine top of all time csv...")
-	all_file = '/data/topCountries.csv'
+	all_file = '../data/topCountries.csv'
 	with open(all_file, "w") as a:
 		awr = csv.writer(a)
 		for sc in sorted_countries:
@@ -386,7 +386,7 @@ if __name__ == "__main__":
 			pass
 			
 	print('making countries.csv')
-	outfile2 = '/data/contributingCountries.csv'
+	outfile2 = '../data/contributingCountries.csv'
 	with open(outfile2, "w") as g:
 		n = 0
 		mw2 = csv.writer(g)
@@ -403,7 +403,7 @@ if __name__ == "__main__":
 	print('sorting')
 	weekCountriesSorted = sorted(weekCountries, reverse=True)
 	print('making topofweek')
-	outfile3 = '/data/topOfWeek.csv'
+	outfile3 = '../data/topOfWeek.csv'
 	with open(outfile3, "w") as t:
 		mw3 = csv.writer(t)
 		for wc in weekCountriesSorted:
@@ -419,11 +419,11 @@ if __name__ == "__main__":
 				for n in countries:
 					if(n[0] == j):
 						if(n[1] != '0' and n[1] != 0):
-							with open('/data/newCountries.csv', "w") as new:
+							with open('newCountries.csv', "w") as new:
 								nw = csv.writer(new)
 								nw.writerow([j])
 			
-	statescsv = '/data/states.csv'
+	statescsv = '../data/states.csv'
 	with open(statescsv, 'w') as s:
 		sw = csv.writer(s)
 		sw.writerow([len(states),50])
@@ -434,9 +434,9 @@ if __name__ == "__main__":
 				continue
 			pass
 		
-	all_countries = '/data/ids_countries.json'
+	all_countries = '../data/ids_countries.json'
    
-	with open('/data/ids_countries.json', 'w') as outfile:
+	with open('../data/ids_countries.json', 'w') as outfile:
 		json.dump(ids_countries, outfile)
 	
 	print('done')

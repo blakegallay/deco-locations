@@ -39,7 +39,7 @@ countries = {}
 ccountries = {}
 cap = {}
 coords = []
-with open('/data/contributingCountries.csv', newline='') as csvfile:
+with open('../data/contributingCountries.csv', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         r = 0
         try:
@@ -55,7 +55,7 @@ with open('/data/contributingCountries.csv', newline='') as csvfile:
         except UnicodeDecodeError:
             pass
 print('opened countries.csv')
-with open('/data/binnedCoordinates.csv', newline='') as csvfile:
+with open('../data/binnedCoordinates.csv', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         try:
             for row in reader:
@@ -67,7 +67,7 @@ print('opened binnedCoordinates.csv')
 colors = {}
 red = Color("black")
 colorRange = list(red.range_to(Color("white"),5))
-
+'''
 for count in ccountries:
     if(countries[count] != '0'):
         colors[count] = str(colorRange[int(math.log(cap[count], 10) * -1 / 2)])
@@ -90,7 +90,7 @@ gmap3 = gmplot.GoogleMapPlotter(0,0,2)
 for c in coords:
     print(c)
     gmap3.scatter([float(c[0])], [float(c[1])], 'k', 50000, marker=False)
-gmap3.draw('/html/coords_map.html')
+gmap3.draw('../html/coords_map.html')
 print('went through c in coords')
 for country in countries:
     
@@ -99,6 +99,7 @@ for country in countries:
         gmap.scatter([geolocator.geocode(country).latitude], [geolocator.geocode(country).longitude], colors[country], radius, marker=False)
         gmap2.scatter([geolocator.geocode(country).latitude], [geolocator.geocode(country).longitude], 'FFF4500', str(country + " - " + countries[country] + " events"), marker=True)
 print('scattered')
+
 lats = []
 lons = []
 for coordinate in coords:
@@ -106,11 +107,11 @@ for coordinate in coords:
     lons += [float(coordinate[1])]
 print('got latlons')
 #gmap.heatmap(lats,lons)
-gmap.draw("/html/circleMap.html")
-gmap2.draw('/html/pinsMap.html')
-
+gmap.draw("../html/circleMap.html")
+gmap2.draw('../html/pinsMap.html')
+'''
 topCountries = []
-with open('/data/topOfWeek.csv', newline='') as top:
+with open('../data/topOfWeek.csv', newline='') as top:
         reader = csv.reader(top, delimiter=',')
         try:
             for row in reader:
@@ -123,7 +124,7 @@ while(len(topCountries) < 10):
 
 welcome = {}
 
-with open('languages.csv', newline='') as lang:
+with open('../data/languages.csv', newline='') as lang:
     lreader = csv.reader(lang, delimiter=',')
     try:
         for row in lreader:
@@ -132,7 +133,7 @@ with open('languages.csv', newline='') as lang:
         pass
 print('got languages')
 states = 0
-with open('/data/states.csv', newline='') as states:
+with open('../data/states.csv', newline='') as states:
     reader = csv.reader(states, delimiter=",")
     cont = True
     for row in reader:
@@ -141,7 +142,7 @@ with open('/data/states.csv', newline='') as states:
             cont = False
         
 print('got states')
-t = open('/html/Leaderboard-month.html','w')
+t = open('../html/Leaderboard-month.html','w')
 
 t.write("<!DOCTYPE html>\n")
 t.write("<html>")
@@ -219,13 +220,13 @@ t.write("				<td>"+topCountries[9][0]+"</td>")
 t.write("			</tr>		")
 t.write("		</thead>")
 t.write("	</table>")
-t.write("</html>")
+t.write("<html>")
 
 t.close()
 print('wrote monthtop')
 topAll = []
 
-with open('/data/topCountries.csv', newline='') as all:
+with open('../data/topCountries.csv', newline='') as all:
         readera = csv.reader(all, delimiter=',')
         try:
             for row in readera:
@@ -234,7 +235,7 @@ with open('/data/topCountries.csv', newline='') as all:
         except UnicodeDecodeError:
             pass
 print('read topofall')
-g = open('/html/Leaderboard.html','w')
+g = open('../html/Leaderboard.html','w')
 
 g.write("<!DOCTYPE html>\n")
 g.write("<html>")
@@ -271,11 +272,11 @@ for c in range(len(topAll)):
 
 g.write("		</thead>")
 g.write("	</table>")
-g.write("</html>")
+g.write("<html>")
 print('wrote topofall')
 g.close()
 newcountry = ""
-with open('/data/newCountries.csv', newline='') as new:
+with open('../data/newCountries.csv', newline='') as new:
         readern = csv.reader(new, delimiter=',')
         try:
             for row in readern:
@@ -285,11 +286,11 @@ with open('/data/newCountries.csv', newline='') as new:
         except UnicodeDecodeError:
             pass
 print('got newcountry')
-n = open('/html/welcome.html','w')
+n = open('../html/welcome.html','w')
 
 
 n.write("<!DOCTYPE html>\n")
-n.write('<html><h5 style="margin-bottom:5px;">'+welcome[newcountry]+' (Welcome) to the Newest Contributor:</h5><h3 style="display:inline;margin-left:40px">'+newcountry+'</h3>     <div style="display:inline-block;text-align: left;"><IMG style="width:55px;height:36px" SRC="./Flags/'+newcountry+'.png" ALT="image"></div></html>')
+n.write('<html><h5 style="margin-bottom:5px;">'+welcome[newcountry]+' (Welcome) to the Newest Contributor:</h5><h3 style="display:inline;margin-left:40px">'+newcountry+'</h3>     <div style="display:inline-block;text-align: left;"><IMG style="width:55px;height:36px" SRC="./Flags/'+newcountry+'.png" ALT="image"></div><html>')
 n.close()
 print('wrote welcome')
 '''
