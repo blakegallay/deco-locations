@@ -14,6 +14,9 @@ import json
 from geopy.geocoders import OpenCage
 
 if __name__ == "__main__":
+	#Variable Definitions
+	threshold = 1 # Bin Size, i.e. events within x degrees latlong of an indexed location get binned
+	
 	
 	# CSV File containing list of all DECO event ID's and countries of origin
 	ids_countries = {}
@@ -34,7 +37,7 @@ if __name__ == "__main__":
 		for row in reader:
 			lastID = row[0]
    
-    # CSV containing all DECO events, updated hourly
+    # db_hourly_safe.csv contains all DECO events, and is updated hourly
 	# We filter out all of the 'old' events, and identify events whose locations have already been 'binned'
 	with open("../data/db_hourly_safe.csv") as f:
 		csv_f = csv.reader(f)
