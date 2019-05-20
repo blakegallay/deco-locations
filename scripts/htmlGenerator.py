@@ -290,7 +290,7 @@ n = open('../html/welcome.html','w')
 
 
 n.write("<!DOCTYPE html>\n")
-n.write('<html><h5 style="margin-bottom:5px;">'+welcome[newcountry]+' (Welcome) to the Newest Contributor:</h5><h3 style="display:inline;margin-left:40px">'+newcountry+'</h3>     <div style="display:inline-block;text-align: left;"><IMG style="width:55px;height:36px" SRC="./Flags/'+newcountry+'.png" ALT="image"></div><html>')
+n.write('<html><h5 style="margin-bottom:5px;">'+welcome[newcountry]+' (Welcome) to the Newest Contributor:</h5><h3 style="display:inline;margin-left:40px">'+newcountry+'</h3>     <div style="display:inline-block;text-align: left;"><IMG style="width:55px;height:36px" SRC="../Flags/'+newcountry+'.png" ALT="image"></div><html>')
 n.close()
 print('wrote welcome')
 '''
