@@ -6,6 +6,19 @@ This repository contains scripts and files which process the location data assoc
 
 We display this information in engaging and interactive ways. Included so far are all-time and monthly leaderboards, displaying the countries most actively contributing to DECO. We are also finding interesting ways of overlaying data on interactive maps, using either Cartopy or the Google Maps API. 
 
+# Instructions
+
+The Python files in /scripts require Python 3.x, as well as the following modules:
+- GeoPy (Geolocation client)
+- urllib + certifi (web handling for geolocation)
+- pylab, numpy (various tools)
+- Cartopy + MatPlotLib + mpld3 + Colour (image/map creation, might be unnessary in the near future as we find better tools)
+- gmplot (Google Maps API, might also be replaced)
+
+I was able to install all of these locally with Pip, although at one time there were problems getting Cartopy to work without manual installation.
+
+The file /data/db_hourly_safe.csv needs to be regularly fetched from /net/deco on Cobalt, after which the scripts are executed. 
+
 ## Scripts and Accessory Files
 
 We use the GeoPy client for Python to parse location data. It associates detailed location data (i.e. Flatiron Building, 175, 5th Avenue, Flatiron, New York, NYC, New York, ...) to latitude and longitude coordinates.
