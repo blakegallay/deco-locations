@@ -29,10 +29,7 @@ All of this processing is handled by locationProcessing.py located in /scripts/
 
 HTML files are created from the csv files kept up to date by locationProcessing.py, and are handled by htmlGenerator.py (also in /scripts/)
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Authors and Acknowledgments
 
-
+TODO
