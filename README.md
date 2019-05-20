@@ -12,7 +12,7 @@ The Python files in /scripts require Python 3.x, as well as the following module
 - GeoPy (Geolocation client)
 - urllib + certifi (web handling for geolocation)
 - pylab, numpy (various tools)
-- Cartopy + MatPlotLib + mpld3 + Colour (image/map creation, might be unnessary in the near future as we find better tools)
+- Cartopy + MatPlotLib + mpld3 + Colour (image creation, might be unnecessary in the future as we find better tools)
 - gmplot (Google Maps API, might also be replaced)
 
 I was able to install all of these locally with Pip, although at one time there were problems getting Cartopy to work without manual installation.
