@@ -44,7 +44,7 @@ if __name__ == "__main__":
 		withinEvents = []
 		cTime = datetime.datetime.now()
 		u = 0
-		with open('/data/gridCoordsLocation.csv') as gridcoords: # List of binned latlon coordinates
+		with open('/data/binnedLocations.csv') as gridcoords: # List of binned latlon coordinates
 			reader = csv.reader(gridcoords)
 			for coordinate in reader:
 				coordinates.append(coordinate)
@@ -57,7 +57,7 @@ if __name__ == "__main__":
 						
 						#if((cTime - eventTime).total_seconds() < 1000000000):
 						if(True):
-							with open('/data/gridCoords.csv') as cds:
+							with open('/data/binnedCoordinates.csv') as cds:
 								coordsreader = csv.reader(cds)
 								new = True
 								for coordinate in coordsreader:
@@ -65,7 +65,7 @@ if __name__ == "__main__":
 										# First level of binning - determines if event coordinates are within 0.1 degrees of an indexed grid point
 										if(float(row[12]) > float(coordinate[0]) - 1 and float(row[12]) < float(coordinate[0]) + 1 and float(row[13]) < float(coordinate[1]) + 1 and float(row[13]) > float(coordinate[1]) - 1):
 											new = False
-											with open('/data/gridCoordsLocation.csv') as locations:
+											with open('/data/binnedLocations.csv') as locations:
 												reader2 = csv.reader(locations)
 												 
 												for r in reader2:
@@ -350,13 +350,13 @@ if __name__ == "__main__":
 	 #	   except UnicodeEncodeError:
 	 #		   continue
 	 #	   pass
-	print("making gridcoords.csv")
-	with open('/data/gridCoordsLocation.csv', "w") as gcoords:
+	print("making binnedCoordinates.csv")
+	with open('/data/binnedLocations.csv', "w") as gcoords:
 		writ = csv.writer(gcoords)
 		for nextCoord in coordinates: 
 			writ.writerow(nextCoord)
 				
-	with open('/data/gridCoords.csv','w') as gridcoords:
+	with open('/data/binnedCoordinates.csv','w') as gridcoords:
 		writer = csv.writer(gridcoords)
 		for coord in coordinates:
 			if(len(coord)!=0):

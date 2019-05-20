@@ -55,7 +55,7 @@ with open('/data/contributingCountries.csv', newline='') as csvfile:
         except UnicodeDecodeError:
             pass
 print('opened countries.csv')
-with open('/data/gridCoords.csv', newline='') as csvfile:
+with open('/data/binnedCoordinates.csv', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         try:
             for row in reader:
@@ -63,7 +63,7 @@ with open('/data/gridCoords.csv', newline='') as csvfile:
                 
         except UnicodeDecodeError:
             pass
-print('opened gridcoords.csv')
+print('opened binnedCoordinates.csv')
 colors = {}
 red = Color("black")
 colorRange = list(red.range_to(Color("white"),5))
