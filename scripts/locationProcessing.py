@@ -34,17 +34,19 @@ if __name__ == "__main__":
 		for row in reader:
 			lastID = row[0]
    
+    # CSV containing all DECO events, updated hourly
+	# We filter out all of the 'old' events, and identify events whose locations have already been 'binned'
 	with open("../data/db_hourly_safe.csv") as f:
 		csv_f = csv.reader(f)
 		dataTable = []
 		coordinates = []
 		newEvents = []
 		fullTable = []
-		weekEvents = []
+		monthEvents = []
 		withinEvents = []
 		cTime = datetime.datetime.now()
 		u = 0
-		with open('../data/binnedLocations.csv') as gridcoords: # List of binned latlon coordinates
+		with open('../data/binnedLocations.csv') as gridcoords: # List of binned latitude/longitude coordinates
 			reader = csv.reader(gridcoords)
 			for coordinate in reader:
 				coordinates.append(coordinate)
@@ -62,12 +64,11 @@ if __name__ == "__main__":
 								new = True
 								for coordinate in coordsreader:
 									if(len(coordinate)>0):
-										# First level of binning - determines if event coordinates are within 0.1 degrees of an indexed grid point
+										# First level of binning - determines if event coordinates are within 1 degree of a coordinate bin
 										if(float(row[12]) > float(coordinate[0]) - 1 and float(row[12]) < float(coordinate[0]) + 1 and float(row[13]) < float(coordinate[1]) + 1 and float(row[13]) > float(coordinate[1]) - 1):
 											new = False
 											with open('../data/binnedLocations.csv') as locations:
 												reader2 = csv.reader(locations)
-												 
 												for r in reader2:
 													if(len(r)!=0):
 														if(r[0] == row[12] and r[1] == row[13]):
@@ -76,8 +77,8 @@ if __name__ == "__main__":
 								if(new == True):
 									dataTable += [row] 
 							u += 1
-					if((cTime - eventTime).total_seconds() < 2628000): # Finds events which occurred within the past week
-						weekEvents.append(row)
+					if((cTime - eventTime).total_seconds() < 2628000): # Finds events which occurred within the past month
+						monthEvents.append(row)
 					ID = row[11]
 	lastID = ID
 	with open('../data/lastID.csv', 'w') as last: # Re-writes lastID
@@ -111,10 +112,10 @@ if __name__ == "__main__":
 	m = 0
 	coords = [[] for n in range(0)]
 	rt = 0
-	topOfWeek = []
+	topOfMonth = []
 	gridpoints = 0
 	
-	weekCountries = []
+	monthCountries = []
  
 	newCountries = []
 	for event in withinEvents: # Goes through events which were close to cataloged grid points
@@ -195,7 +196,7 @@ if __name__ == "__main__":
 		cs = False
 		country = addresslist[-1]
 		print(country)
-		if row in weekEvents:
+		if row in monthEvents:
 			pass
 		
 		
@@ -296,48 +297,48 @@ if __name__ == "__main__":
 	print(gridpoints)
 	#print(countries)
 	print("got to creation of csv files")
-	weekCoords = []
+	monthCoords = []
 	
 			
-	print("making weekCoords....")
-	for wEvent in weekEvents:
+	print("making monthCoords....")
+	for wEvent in monthEvents:
 		latlon = [wEvent[12],wEvent[13]]
 		cont = True
 		if(float(latlon[0]) == 0 and float(latlon[1]) == 0 or float(latlon[0]) > 1000 or float(latlon[1]) > 1000):
 		   
 			continue
-		for u in range(len(weekCoords)):
+		for u in range(len(monthCoords)):
 			
-			if(float(latlon[0]) < float(weekCoords[u][0]) + 5 and float(latlon[0]) > float(weekCoords[u][0]) - 5 and float(latlon[1]) < float(weekCoords[u][1]) + 5 and float(latlon[1]) > float(weekCoords[u][1]) - 5):
+			if(float(latlon[0]) < float(monthCoords[u][0]) + 5 and float(latlon[0]) > float(monthCoords[u][0]) - 5 and float(latlon[1]) < float(monthCoords[u][1]) + 5 and float(latlon[1]) > float(monthCoords[u][1]) - 5):
 				
 				
-				for t in range(len(weekCoords)):
-					if(weekCoords[t][0] == latlon[0] and weekCoords[t][1] == latlon[1]):
-						weekCoords[t][2] += 1
+				for t in range(len(monthCoords)):
+					if(monthCoords[t][0] == latlon[0] and monthCoords[t][1] == latlon[1]):
+						monthCoords[t][2] += 1
 				cont = False
 				v = u  
 				break
 			
 		if(cont == True):
 			
-			weekCoords.append([latlon[0],latlon[1],0])
+			monthCoords.append([latlon[0],latlon[1],0])
 			#print("new coord found")
 			
 			
 	print("making countries...")
-	for wCoord in weekCoords:
+	for wCoord in monthCoords:
 		countryIndexed = False
 		country = (((geolocator.reverse([wCoord[0],wCoord[1]]))[0].address).split(", "))[-1]
 		print(country)
-		for n in range(len(weekCountries)):
-			if(country == weekCountries[n][1]):
+		for n in range(len(monthCountries)):
+			if(country == monthCountries[n][1]):
 				countryIndexed = True
 		if(countryIndexed == False):
-			weekCountries.append([wCoord[2], country])
+			monthCountries.append([wCoord[2], country])
 		else:
-			for u in range(len(weekCountries)):
-				if(weekCountries[u][1] == country):
-					weekCountries[u][0] += wCoord[2]
+			for u in range(len(monthCountries)):
+				if(monthCountries[u][1] == country):
+					monthCountries[u][0] += wCoord[2]
 	
 	# Starts a new csv file
 	#outFile = 'opencage2_%i_%i.csv' % (args.start, args.stop)
@@ -401,12 +402,12 @@ if __name__ == "__main__":
 			n += 1
 		#mw2.writerow(top)
 	print('sorting')
-	weekCountriesSorted = sorted(weekCountries, reverse=True)
-	print('making topofweek')
-	outfile3 = '../data/topOfWeek.csv'
+	monthCountriesSorted = sorted(monthCountries, reverse=True)
+	print('making topofmonth')
+	outfile3 = '../data/topOfMonth.csv'
 	with open(outfile3, "w") as t:
 		mw3 = csv.writer(t)
-		for wc in weekCountriesSorted:
+		for wc in monthCountriesSorted:
 			try:
 				for country in countries:
 					if wc[1] == country[0]:

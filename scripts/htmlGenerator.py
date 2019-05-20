@@ -111,14 +111,14 @@ gmap.draw("../html/circleMap.html")
 gmap2.draw('../html/pinsMap.html')
 '''
 topCountries = []
-with open('../data/topOfWeek.csv', newline='') as top:
+with open('../data/topOfMonth.csv', newline='') as top:
         reader = csv.reader(top, delimiter=',')
         try:
             for row in reader:
                 topCountries.append([row[0],row[1]])         
         except UnicodeDecodeError:
             pass
-print('got topofweek')
+print('got topofmonth')
 while(len(topCountries) < 10):
     topCountries.append(['---','---'])
 
@@ -166,7 +166,7 @@ t.write("			</tr>")
 t.write("			<tr style='border: 1px Solid Black'>")
 t.write("				<th>Rank  </th>")
 t.write("				<th>Country  </th>")
-t.write("				<th>Number of events</th>")
+t.write("				<th>Events</th>")
 t.write("			</tr>")
 t.write("			<tr>")
 t.write("				<td>1</td>")
@@ -259,7 +259,7 @@ g.write("			</tr>")
 g.write("			<tr style='border: 1px Solid Black'>")
 g.write("				<th>Rank  </th>")
 g.write("				<th>Country  </th>")
-g.write("				<th>Number of events</th>")
+g.write("				<th>Events</th>")
 g.write("			</tr>")
 
 for c in range(len(topAll)):
