@@ -1,4 +1,4 @@
-important note: the main data file (/data/db_hourly_safe.csv) is missing because of its large size. if this repository becomes frequently used, I will setup GitHub LFS
+important note: the main data file (/data/db_hourly_safe.csv) is missing because of its large size. if this repository becomes frequently used, I will setup GitHub LFS to accomodate it
 
 # DECO Location Data Processing and Visualization
 
