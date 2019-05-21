@@ -14,6 +14,8 @@ The Python files in /scripts require Python 3.x, as well as the following module
 - pylab, numpy (various tools)
 - Cartopy + MatPlotLib + mpld3 + Colour (image creation, might be unnecessary in the future as we find better tools)
 - gmplot (Google Maps API, might also be replaced)
+- pandas + geopandas (data analysis)
+- bokeh (data visualization for web)
 
 I was able to install all of these locally with Pip, although at one time there were problems getting Cartopy to work without manual installation.
 
@@ -27,7 +29,7 @@ In order to cut down on the number of geolocator requests we have to make for th
 
 All of this processing is handled by locationProcessing.py located in /scripts/
 
-HTML files are created from the csv files kept up to date by locationProcessing.py, and are handled by htmlGenerator.py (also in /scripts/)
+HTML files are created from the csv files kept up to date by locationProcessing.py, and most are handled by htmlGenerator.py (also in /scripts/) The new Bokeh world map is created by worldMap.py.
 
 
 ## Authors and Acknowledgments
