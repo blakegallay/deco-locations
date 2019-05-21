@@ -26,6 +26,7 @@ if __name__ == "__main__":
 	except FileNotFoundError:
 		pass
 
+	
 	# Import the geolocator program and use an API key
 	## Limitations: 2500/day, 1/second
 	geolocator = OpenCage("78e7d0d08860206c27e848a7bc4f1451")
@@ -36,6 +37,13 @@ if __name__ == "__main__":
 		reader = csv.reader(l)
 		for row in reader:
 			lastID = row[0]
+   
+    #locations of all DECO users
+	users = []
+	with open('../data/userLocations.csv') as u:
+		data = csv.reader(u)
+		for user in data:
+			users.append(user)
    
     # db_hourly_safe.csv contains all DECO events, and is updated hourly
 	# We filter out all of the 'old' events, and identify events whose locations have already been 'binned'
@@ -53,6 +61,7 @@ if __name__ == "__main__":
 			reader = csv.reader(gridcoords)
 			for coordinate in reader:
 				coordinates.append(coordinate)
+		n = 0
 		for row in csv_f:
 			if(len(row) > 11):
 				if(row[12] != "latitude"): # Makes sure that the top row (column headers) isn't being read
@@ -61,7 +70,12 @@ if __name__ == "__main__":
 						fullTable += [row]
 						
 						#if((cTime - eventTime).total_seconds() < 1000000000):
-						if(True):
+						if(True): #temporary, while we figure out if we should throw out events with nonsense times
+							newUser = True
+							for user in users:
+								if(len(user)!=0):
+									if(user[0] == row[15]):
+										newUser = False	
 							with open('../data/binnedCoordinates.csv') as cds:
 								coordsreader = csv.reader(cds)
 								new = True
@@ -75,6 +89,8 @@ if __name__ == "__main__":
 												for r in reader2:
 													if(len(r)!=0):
 														if(r[0] == row[12] and r[1] == row[13]):
+															if(newUser):
+																users.append([row[15], r[2]])
 															nextCountry = r[2]
 															withinEvents += [nextCountry]
 								if(new == True):
@@ -281,6 +297,13 @@ if __name__ == "__main__":
 			break
 		ids_countries[row[11]] = country
 		
+		newUser = True
+		for user in users:
+			if(user[0] == row[15]):
+				newUser = False	
+		if(newUser):
+			users.append(row[15], country)
+		
 		r += 1
 		
 
@@ -296,13 +319,12 @@ if __name__ == "__main__":
 	#	newAltlist += [n]
 	#	newAltlist += [totalAltitude/ len(altitudes[n])]
 	#	AvgAltitude.append(newAltlist)
-		
+	
 	print(gridpoints)
 	#print(countries)
 	print("got to creation of csv files")
 	monthCoords = []
-	
-			
+		
 	print("making monthCoords....")
 	for wEvent in monthEvents:
 		latlon = [wEvent[12],wEvent[13]]
@@ -359,6 +381,11 @@ if __name__ == "__main__":
 		writ = csv.writer(gcoords)
 		for nextCoord in coordinates: 
 			writ.writerow(nextCoord)
+			
+	with open('../data/userLocations.csv', "w") as userlocations:
+		writ = csv.writer(userlocations)
+		for user in users: 
+			writ.writerow(user)
 				
 	with open('../data/binnedCoordinates.csv','w') as gridcoords:
 		writer = csv.writer(gridcoords)
@@ -389,6 +416,8 @@ if __name__ == "__main__":
 				continue
 			pass
 			
+	
+			
 	print('making countries.csv')
 	outfile2 = '../data/contributingCountries.csv'
 	with open(outfile2, "w") as g:
@@ -397,7 +426,14 @@ if __name__ == "__main__":
 		for r in countries:
 			if(n < 197):
 				try:
+					num_users = 0
+					for user in users:
+						if(len(user)!=0):
+							if(user[1] == r[0]):
+								num_users += 1
 					r[2] = float(r[1])/float(r[3])
+					r.append(num_users)
+					print(r)
 					mw2.writerow(r)
 				except UnicodeEncodeError:
 					continue

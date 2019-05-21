@@ -22,7 +22,7 @@ gdf.columns = ['country', 'country_code', 'geometry']
 
 deco_countries_path = '../data/contributingCountries.csv'
 
-df = pd.read_csv(deco_countries_path, names=['events','percent', 'population'])
+df = pd.read_csv(deco_countries_path, names=['events','percent', 'population', 'users'])
 df.index.name = 'country'
 
 df.drop(['percent'], axis=1)
@@ -42,7 +42,7 @@ palette = palette[::-1]
 
 color_mapper = LogColorMapper(palette = palette, low = 0, high = 300000)
 
-hover = HoverTool(tooltips = [ ('Country','@country'),('# Events', '@events')])
+hover = HoverTool(tooltips = [ ('Country','@country'),('Total Events', '@events'),('Users', '@users')])
 
 p = figure(title='DECO Data Taking Locations', plot_height=600, plot_width=950, toolbar_location=None, tools=[hover])
 p.xgrid.grid_line_color=None
