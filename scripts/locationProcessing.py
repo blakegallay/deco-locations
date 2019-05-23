@@ -48,41 +48,70 @@ if __name__ == "__main__":
     # db_hourly_safe.csv contains all DECO events, and is updated hourly
 	# We filter out all of the 'old' events, and identify events whose locations have already been 'binned'
 	with open("../data/db_hourly_safe.csv") as f:
+	
+		# All data from db_hourly_safe.csv
 		csv_f = csv.reader(f)
-		dataTable = []
-		coordinates = []
-		newEvents = []
-		fullTable = []
+		
+		# Events which are being processed for the first time, and are from a new location
+		data_toGeolocate = []
+		
+		# Events which are being processed for the first time, but are from a known location
+		data_toBin = []
+		
+		# All events from the past month
 		monthEvents = []
-		withinEvents = []
+		
+		# Coordinate bins
+		coordinates = []
+
 		cTime = datetime.datetime.now()
 		u = 0
-		with open('../data/binnedLocations.csv') as gridcoords: # List of binned latitude/longitude coordinates
-			reader = csv.reader(gridcoords)
-			for coordinate in reader:
-				coordinates.append(coordinate)
+		with open('../data/binnedLocations.csv') as coords: # List of binned latitude/longitude coordinates
+			reader = csv.reader(coords)
+			for coord in reader:
+				coordinates.append(coord)
+				
 		n = 0
+		
+		# Look through the entire DECO data spreadsheet
 		for row in csv_f:
-			if(len(row) > 11):
-				if(row[12] != "latitude"): # Makes sure that the top row (column headers) isn't being read
-					eventTime = datetime.datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S.%f') # Gets current time
+		
+			# Make sure the row is full (sometimes data gets snuck in at the end that only takes up a few cells)
+			if(len(row) > 11): 
+			
+				# Make sure that column headers aren't being read
+				if(row[12] != "latitude"):
+				
+					eventTime = datetime.datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S.%f') # Time of data collection
+					
+					# Check if the event has been processed by comparing its ID to the last ID processed (is this actually reliable?)
 					if(int(row[11]) > int(lastID)):
-						fullTable += [row]
-						
+					
 						#if((cTime - eventTime).total_seconds() < 1000000000):
-						if(True): #temporary, while we figure out if we should throw out events with nonsense times
+						if(True): # Temporary, while we figure out if we should throw out events with nonsense times
+						
+							# Check if the Device ID associated with the event has appeared in previous data
 							newUser = True
 							for user in users:
 								if(len(user)!=0):
 									if(user[0] == row[15]):
 										newUser = False	
+										
+							# Location Binning:
+							# We keep a catalog of known locations, in order to minimize daily geolocator requests.
+							# We compare the latitude/longitude coordinates of a new event to this catalog.
+							# 	- If it is nearby a known coordinate, we do not use the geolocator, and instead use the cataloged location
+							#	- If it is in a new place, we fetch its location using the geolocator, and add its location to the catalog
 							with open('../data/binnedCoordinates.csv') as cds:
 								coordsreader = csv.reader(cds)
 								new = True
 								for coordinate in coordsreader:
 									if(len(coordinate)>0):
 										# First level of binning - determines if event coordinates are within 1 degree of a coordinate bin
-										if(float(row[12]) > float(coordinate[0]) - 1 and float(row[12]) < float(coordinate[0]) + 1 and float(row[13]) < float(coordinate[1]) + 1 and float(row[13]) > float(coordinate[1]) - 1):
+										if(float(row[12]) > float(coordinate[0]) - threshold 
+											and float(row[12]) < float(coordinate[0]) + threshold 
+										    and float(row[13]) < float(coordinate[1]) + threshold 
+										    and float(row[13]) > float(coordinate[1]) - threshold):
 											new = False
 											with open('../data/binnedLocations.csv') as locations:
 												reader2 = csv.reader(locations)
@@ -92,23 +121,31 @@ if __name__ == "__main__":
 															if(newUser):
 																users.append([row[15], r[2]])
 															nextCountry = r[2]
-															withinEvents += [nextCountry]
+															data_toBin += [nextCountry]
+															ids_countries[row[11]] = nextCountry
 								if(new == True):
-									dataTable += [row] 
+									data_toGeolocate += [row] 
 							u += 1
-					if((cTime - eventTime).total_seconds() < 2628000): # Finds events which occurred within the past month
+							
+					# Finds events which occurred within the past month
+					if((cTime - eventTime).total_seconds() < 2628000): 
 						monthEvents.append(row)
 					ID = row[11]
+					
+	# To tell which events are 'new' on each run, we keep track of the latest eventID processed.
 	lastID = ID
-	with open('../data/lastID.csv', 'w') as last: # Re-writes lastID
+	with open('../data/lastID.csv', 'w') as last:
 		writer = csv.writer(last)
 		writer.writerow([lastID])
 		
-	with open("../data/contributingCountries.csv") as y: # List of DECO contributor countries
+	# We read the current country data so that we can add to it
+	countryTable = []
+	with open("../data/contributingCountries.csv") as y:
 		csv_y = csv.reader(y)
-		countryTable = []
 		for row in csv_y:
 			countryTable += [row]
+			
+	# US State Data
 	states = []
 	with open('../data/states.csv') as st: # US states
 		streader = csv.reader(st)
@@ -122,6 +159,7 @@ if __name__ == "__main__":
 	countries = []
 	magnitude = {}
 	u = 0
+	
 	for j in countryTable:
 		countries.append(j)
 		magnitude[j[0]] = [u,int(j[1])]
@@ -137,17 +175,19 @@ if __name__ == "__main__":
 	monthCountries = []
  
 	newCountries = []
-	for event in withinEvents: # Goes through events which were close to cataloged grid points
-		
-		for cntry in countries:
-			if(cntry[0] == event[0]):
-				cntry[0][1] += 1
-	#print(countries)
-	for row in dataTable: # Goes through all events which made it through filters
+	
+	# Goes through events which were close to cataloged grid points
+	# Add to the country spreadsheet
+	for event in data_toBin: 
+		for country in countries:
+			if(country[0] == event[0]):
+				country[0][1] += 1
+				
+	# Goes through all events which made it through filters
+	for row in data_toGeolocate:
 		rt += 1
 		 
 		v = 0
-	  # Extract info from the csv file
 		date = row[2]
 		eventID = row[11]
 		latlon = (row[12], row[13])
@@ -174,9 +214,7 @@ if __name__ == "__main__":
 		found = False
 		attempt = 0
 		nattempts = 5
-		#print(rt)
 		if(cont == True):
-			print(len(coords))
 			while not found and attempt < nattempts:
 				try:
 					location = geolocator.reverse(latlon)
@@ -194,7 +232,6 @@ if __name__ == "__main__":
 			coords[-1][2] = address
 			if address == 'Null Island' or address == 0:
 				continue
-			print(address)
 		else:
 			if location == None:
 				continue
@@ -214,17 +251,15 @@ if __name__ == "__main__":
 		
 		cs = False
 		country = addresslist[-1]
-		print(country)
+
 		if row in monthEvents:
 			pass
 		
 		
 		state_abbreviations = {'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California','CO':'Colorado','CT':'Connecticut','DE':'Delaware','FL':'Florida','GA':'Georgia','HI':'Hawaii','ID':"Idaho","IL":"Illinois","IN":"Indiana","IA":"Iowa",'KS':"Kansas",'KY':"Kentucky",'LA':'Louisiana','ME':'Maine','MD':'Maryland','MA':'Massachusetts','MI':'Michigan','MN':'Minnesota',"MS":'Mississippi','MO':'Missouri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire','NJ':'New Jersey','NM':'New Mexico','NY':'New York','NC':'North Carolina','ND':'North Dakota','OH':'Ohio','OK':'Oklahoma','OR':"Oregon",'PA':'Pennsylvania','RI':'Rhode Island','SC':'South Carolina','SD':'South Dakota','TN':'Tennessee','TX':'Texas','UT':'Utah','VT':'Vermont','VA':'Virginia','WA':'Washington','WV':'West Virginia','WI':'Wisconsin','WY':'Wyoming'}
 		
-		try:
-			state = addresslist[-2].split(" ")[0]
-		except IndexError:
-			continue
+		state = addresslist[-2].split(" ")[0]
+	
 		full_state_string = state
 		if state in state_abbreviations:
 			instates = False
@@ -245,10 +280,11 @@ if __name__ == "__main__":
 			stateinfo = addresslist[-2].encode('utf-8')
 		except IndexError:
 			continue
-		stateinfo = stateinfo.decode().split(" ")
-		
-		
-		
+			
+		try:
+			stateinfo = stateinfo.decode().split(" ")
+		except UnicodeDecodeError:
+			continue
 		
 		try:
 			if(cs == True):
@@ -299,10 +335,12 @@ if __name__ == "__main__":
 		
 		newUser = True
 		for user in users:
-			if(user[0] == row[15]):
-				newUser = False	
+			if(len(user)!=0):
+				if(len(row) > 11):
+					if(user[0] == row[15]):
+						newUser = False	
 		if(newUser):
-			users.append(row[15], country)
+			users.append([row[15], country])
 		
 		r += 1
 		
@@ -320,14 +358,13 @@ if __name__ == "__main__":
 	#	newAltlist += [totalAltitude/ len(altitudes[n])]
 	#	AvgAltitude.append(newAltlist)
 	
-	print(gridpoints)
-	#print(countries)
 	print("got to creation of csv files")
 	monthCoords = []
 		
+	'''
 	print("making monthCoords....")
-	for wEvent in monthEvents:
-		latlon = [wEvent[12],wEvent[13]]
+	for event in monthEvents:
+		latlon = [event[12],event[13]]
 		cont = True
 		if(float(latlon[0]) == 0 and float(latlon[1]) == 0 or float(latlon[0]) > 1000 or float(latlon[1]) > 1000):
 		   
@@ -347,9 +384,8 @@ if __name__ == "__main__":
 		if(cont == True):
 			
 			monthCoords.append([latlon[0],latlon[1],0])
-			#print("new coord found")
-			
-			
+			#print("new coord found")		
+	
 	print("making countries...")
 	for wCoord in monthCoords:
 		countryIndexed = False
@@ -364,7 +400,24 @@ if __name__ == "__main__":
 			for u in range(len(monthCountries)):
 				if(monthCountries[u][1] == country):
 					monthCountries[u][0] += wCoord[2]
+	'''
 	
+	monthCountries_dict = {}
+	for event in monthEvents:
+		try:
+			country = ids_countries[event[11]]
+		except KeyError:
+			continue
+		if country in monthCountries_dict:
+			monthCountries_dict[country] += 1
+		else:
+			monthCountries_dict[country] = 1
+			
+	monthCountries = []
+	for country in monthCountries_dict:
+		monthCountries.append([monthCountries_dict[country], country])
+		
+	print(monthCountries)
 	# Starts a new csv file
 	#outFile = 'opencage2_%i_%i.csv' % (args.start, args.stop)
 	#with open(outFile, "w") as f:
@@ -405,7 +458,6 @@ if __name__ == "__main__":
 	with open(all_file, "w") as a:
 		awr = csv.writer(a)
 		for sc in sorted_countries:
-			print(sc)
 			if sc[1] == "":
 				continue
 			try:
@@ -415,8 +467,6 @@ if __name__ == "__main__":
 			except UnicodeEncodeError:
 				continue
 			pass
-			
-	
 			
 	print('making countries.csv')
 	outfile2 = '../data/contributingCountries.csv'
@@ -433,7 +483,6 @@ if __name__ == "__main__":
 								num_users += 1
 					r[2] = float(r[1])/float(r[3])
 					r.append(num_users)
-					print(r)
 					mw2.writerow(r)
 				except UnicodeEncodeError:
 					continue
@@ -442,6 +491,7 @@ if __name__ == "__main__":
 		#mw2.writerow(top)
 	print('sorting')
 	monthCountriesSorted = sorted(monthCountries, reverse=True)
+	print(monthCountriesSorted)
 	print('making topofmonth')
 	outfile3 = '../data/topOfMonth.csv'
 	with open(outfile3, "w") as t:
@@ -456,12 +506,12 @@ if __name__ == "__main__":
 			pass
 	if(len(newCountries) != 0):
 		for j in newCountries:
-				for n in countries:
-					if(n[0] == j):
-						if(n[1] != '0' and n[1] != 0):
-							with open('newCountries.csv', "w") as new:
-								nw = csv.writer(new)
-								nw.writerow([j])
+			for n in countries:
+				if(n[0] == j):
+					if(n[1] != '0' and n[1] != 0):
+						with open('newCountries.csv', "w") as new:
+							nw = csv.writer(new)
+							nw.writerow([j])
 			
 	statescsv = '../data/states.csv'
 	with open(statescsv, 'w') as s:

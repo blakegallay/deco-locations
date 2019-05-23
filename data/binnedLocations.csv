@@ -1,8 +1,4 @@
 
-46.22,6.09,Switzerland
-52.84,13.81,Germany
-46.22,6.09,Switzerland
-52.84,13.81,Germany
 56.46,9.4,Denmark
 41.38,2.05,Spain
 33.71,-117.78,United States of America
@@ -14,10 +10,9 @@
 41.97,-87.9,United States of America
 37.45,-122.19,United States of America
 45.49,10.96,Italy
-38.85,-120,United States of America
+38.85,-120.0,United States of America
 32.43,-104.27,United States of America
 43.67,-114.35,United States of America
-30.01,-109.22,Mexico
 31.47,-110.57,United States of America
 42.82,-106.27,United States of America
 39.18,-106.8,United States of America
@@ -25,6 +20,7 @@
 51.2,6.6,Germany
 38.96,-95.25,United States of America
 52.94,9.97,Germany
+52.34,13.63,Germany
 39.69,-75.72,United States of America
 42.59,-74.72,United States of America
 -31.58,-60.72,Argentina
@@ -66,7 +62,6 @@
 41.82,3.07,Spain
 47.84,35.21,Ukraine
 39.74,-105.15,United States of America
-42.88,74.66,Ибраева Эсенгула
 42.4,-83.37,United States of America
 51.99,20.82,Poland
 40.71,-73.77,United States of America
@@ -81,22 +76,22 @@
 54.37,82.12,Russia
 52.45,4.84,Netherlands
 45.49,16.37,Croatia
-31.16,121.39,PRC
+31.16,121.39,China
 19.51,-99.2,Mexico
 44.91,7.67,Italy
 32.27,-90.86,United States of America
 43.76,-79.39,Canada
-35,-80.57,United States of America
+35.0,-80.57,United States of America
 40.74,14.78,Italy
 41.93,12.47,Italy
 44.49,11.35,Italy
 48.18,11.59,Germany
 64.85,-147.68,United States of America
+46.23,6.05,Switzerland
 48.17,18.89,Slovakia
 50.46,30.5,Ukraine
 3.21,113.1,Malaysia
 55.14,59.67,Russia
-51.56,9.94,Germany
 18.5,73.82,India
 52.2,5.95,Netherlands
 -34.51,150.79,Australia
@@ -119,26 +114,20 @@
 50.07,14.42,Czechia
 43.47,-3.82,Spain
 40.4,-3.71,Spain
--32.33,-58.07,Uruguay
 43.54,-8.27,Spain
 47.53,-122.35,United States of America
-41.92,-4.49,Spain
 -34.82,-58.38,Argentina
 4.76,-74.03,Colombia
 -37.91,145.18,Australia
 37.93,-1.28,Spain
-51.97,7.6,Germany
 38.37,27.19,Turkey
 0.85,108.92,Indonesia
 53.76,-2.71,United Kingdom
 27.67,85.41,Nepal
 44.75,-123.33,United States of America
-54.54,23.34,Lithuania
 37.46,-120.86,United States of America
 -22.93,-43.68,Brazil
 41.65,-0.92,Spain
--33.52,-70.79,Chile
-53.91,27.48,улица Жудро
 60.64,6.46,Norway
 35.78,51.35,Iran
 10.9,78.5,India
@@ -149,14 +138,12 @@
 54.9,8.31,Germany
 -12.86,-38.29,Brazil
 -7.26,72.38,United Kingdom
-43.31,-2,Spain
 21.09,-101.62,Mexico
 -23.59,-70.38,Chile
 45.8,14.37,Slovenia
 19.17,-96.22,Mexico
 35.53,-87.21,United States of America
 24.8,120.99,ROC
--32.91,-60.89,Argentina
 69.19,33.24,Russia
 36.12,-115.3,United States of America
 -20.46,-55.77,Brazil
@@ -176,7 +163,6 @@
 62.47,25.7,Finland
 36.83,10.14,Tunisia
 18.43,-70.1,D.R.
-37.2,-4.78,Spain
 41.1,-104.84,United States of America
 42.65,23.39,Bulgaria
 45.42,-76.33,Canada
@@ -201,7 +187,7 @@
 37.39,-5.92,Spain
 42.64,-5.56,Spain
 39.18,-3.01,Spain
-33.04,-4,Morocco
+33.04,-4.0,Morocco
 28.39,-16.53,Spain
 38.89,-6.98,Spain
 36.84,-2.45,Spain
@@ -210,20 +196,17 @@
 42.42,13.52,Italy
 37.01,127.09,South Korea
 40.1,-88.25,United States of America
-49.78,9.97,Germany
 45.38,-73.61,Canada
 60.17,24.93,Finland
 22.13,-100.99,Mexico
-45.63,12.56,Italy
 -23.78,-53.27,Brazil
 25.23,88.78,India
 -22.23,-54.75,Brazil
 48.22,16.36,Austria
 19.88,75.32,India
--32,115.94,Australia
+-32.0,115.94,Australia
 52.87,-0.99,United Kingdom
 -36.89,174.79,New Zealand
-8.25,-80.55,Panama
 10.19,-68.02,Venezuela
 4.81,-75.74,Colombia
 3.45,-76.51,Colombia
@@ -232,29 +215,24 @@
 10.79,-74.76,Colombia
 7.48,-61.9,Venezuela
 19.85,-90.49,Mexico
-48.58,-2,France
-41.01,29.02,Turkey
+48.58,-2.0,France
 43.71,3.87,France
 -17.39,-66.06,Bolivia
--33.03,-68.91,Argentina
 41.92,123.41,PRC
 43.92,12.9,Italy
-46.83,-0.86,France
 41.14,-81.33,United States of America
 47.55,7.59,Switzerland
 59.88,30.4,Russia
-47.4,-2.09,France
 45.75,4.89,France
 49.02,-0.03,France
 44.16,0.61,France
 57.57,-2.89,United Kingdom
-50,12.1,Germany
+50.0,12.1,Germany
 52.09,-4.66,United Kingdom
 43.12,5.95,France
-36.07,120.32,PRC
 59.27,18.14,Sweden
 49.27,6.59,France
-24.36,109.4,PRC
+24.36,109.4,China
 30.32,-97.74,United States of America
 -16.72,-43.86,Brazil
 37.98,23.75,Greece
@@ -262,16 +240,11 @@
 47.66,9.17,Germany
 33.38,-111.7,United States of America
 -0.2,-78.43,Ecuador
-40.66,22.91,Greece
 25.6,85.22,India
 3.16,101.59,Malaysia
 12.34,76.59,India
-52.27,8.61,Germany
-47.33,4.79,France
-47.45,0.87,France
 -0.73,34.05,Kenya
 61.47,23.83,Finland
--34.59,-60.94,Argentina
 39.28,16.28,Italy
 38.35,-81.64,United States of America
 54.97,-2.14,United Kingdom
@@ -286,7 +259,6 @@
 9.95,-84.04,11502 Costa Rica
 26.64,93.61,India
 22.5,88.38,India
-60.72,22.59,Finland
 -39.84,-73.23,Chile
 37.41,46.26,Iran
 28.14,113.04,PRC
@@ -294,14 +266,11 @@
 46.51,-84.29,Canada
 46.51,11.35,Italy
 28.71,-106.15,Mexico
-50.96,13.42,Germany
 37.57,15.05,Italy
 40.01,18.36,Italy
 43.13,-77.63,United States of America
 32.99,35.7,Israel
 13.03,77.61,India
-39.48,72.91,Kyrgyzstan
-51.16,71.5,улица Кайрата
 37.08,-111.67,United States of America
 44.2,-87.72,United States of America
 43.19,-87.92,United States of America
@@ -316,7 +285,6 @@
 39.65,-79.95,United States of America
 5.95,10.15,Cameroon
 43.93,2.15,France
-50.94,2.04,France
 -26.06,27.98,RSA
 2.42,103.85,Malaysia
 31.2,-94.48,United States of America
@@ -337,7 +305,6 @@
 56.28,44.04,Russia
 50.55,136.99,Russia
 34.74,32.89,Cyprus
-55.53,28.66,5-ый микрорайон
 56.84,60.57,Russia
 64.56,39.81,Russia
 58.05,56.1,Russia
@@ -349,19 +316,15 @@
 49.61,-123.22,Canada
 52.89,104.99,Russia
 25.73,-100.34,Mexico
-62.98,27.7,Finland
 40.84,-75.72,United States of America
 -77.85,166.67,McMurdo Station
-39.29,9.27,Italy
 35.32,-83.08,United States of America
 60.29,5.23,Norway
 38.81,-123.01,United States of America
 29.86,31.32,Egypt
 44.06,10.04,Italy
-48.78,9.89,Germany
 50.08,19.9,Poland
 35.04,37.49,Syria
-49.92,20.95,Poland
 31.55,74.3,Pakistan
 56.47,84.97,Russia
 50.29,18.78,Poland
@@ -378,7 +341,7 @@
 -9.78,-36.11,Brazil
 47.88,13.02,Austria
 45.97,39.18,Russia
--38.94,-68,Argentina
+-38.94,-68.0,Argentina
 20.73,-156.45,United States of America
 11.03,76.9,India
 -15.83,-67.56,Bolivia
@@ -396,7 +359,6 @@
 -33.97,25.45,RSA
 14.88,102.02,Thailand
 53.28,-9.06,Ireland
-32.46,-116.92,Mexico
 -18.91,-48.26,Brazil
 79.14,11.04,Norway
 31.98,35.87,Jordan
@@ -408,22 +370,18 @@
 8.69,-62.19,Venezuela
 48.45,-123.39,Canada
 39.91,-83.09,United States of America
-19.43,-100.36,Mexico
 35.71,-106.0,United States of America
 50.02,36.22,Ukraine
 42.72,-6.7,Spain
 46.81,-71.25,Canada
 36.97,-89.89,United States of America
-51.71,19.48,Poland
 -38.09,-57.55,Argentina
 -23.56,-46.73,Brazil
 62.54,113.98,Russia
-48.0,17.6,Slovakia
 51.09,14.46,Germany
-40.0,116.38,PRC
+40.0,116.38,China
 58.13,52.69,Russia
 40.83,-96.66,United States of America
-56.56,14.12,Sweden
 -30.86,-64.53,Argentina
 43.92,42.74,Russia
 37.68,-77.47,United States of America
