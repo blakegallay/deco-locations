@@ -1,21 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Jun 22 13:11:06 2017
-
-@author: patron
-"""
-'''
->>> from geopy.geocoders import Nominatim
->>> geolocator = Nominatim()
->>> location = geolocator.geocode("175 5th Avenue NYC")
->>> print(location.address)
-Flatiron Building, 175, 5th Avenue, Flatiron, New York, NYC, New York, ...
->>> print((location.latitude, location.longitude))
-(40.7410861, -73.9896297241625)
->>> print(location.raw)
-'''
-
 
 import gmplot
 import csv
@@ -26,8 +10,6 @@ import certifi
 from math import *
 import math
 import urllib
-#import cartopy.crs as ccrs
-#import cartopy.io.shapereader as shpreader
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import pylab as pl
@@ -46,70 +28,17 @@ with open('../data/contributingCountries.csv', newline='') as csvfile:
             for row in reader:
                 if r < 196:
                     countries[row[0]] = row[1]
-                    ccountries[row[0]] = row[2]
-                    cap[row[0]] = float(row[1]) / float(row[3])
                 r += 1
                 if(r > 196):
                     break
-                #print(cap[row[0]])
+
         except UnicodeDecodeError:
             pass
-print('opened countries.csv')
-with open('../data/binnedCoordinates.csv', newline='') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',')
-        try:
-            for row in reader:
-                coords.append(row)
-                
-        except UnicodeDecodeError:
-            pass
-print('opened binnedCoordinates.csv')
+
 colors = {}
 red = Color("black")
 colorRange = list(red.range_to(Color("white"),5))
-'''
-for count in ccountries:
-    if(countries[count] != '0'):
-        colors[count] = str(colorRange[int(math.log(cap[count], 10) * -1 / 2)])
-        print(int(math.log(cap[count], 10) * -1 / 2))
-print('counted ccountries')
-def uo(args, **kwargs):
-    return urllib.request.urlopen(args, cafile=certifi.where(), **kwargs)
-geolocator=Nominatim(timeout=3)
-geolocator.urlopen = uo
-keys = []
-k = 0
-for key in countries:
-    keys.append(key)
 
-gmap = gmplot.GoogleMapPlotter(0, 0, 2)
-
-gmap2 = gmplot.GoogleMapPlotter(0,0,2)
-gmap3 = gmplot.GoogleMapPlotter(0,0,2)
-
-for c in coords:
-    print(c)
-    gmap3.scatter([float(c[0])], [float(c[1])], 'k', 50000, marker=False)
-gmap3.draw('../html/coords_map.html')
-print('went through c in coords')
-for country in countries:
-    
-    if(countries[country] != '0'):
-        radius = int(countries[country]) * 2 + 200000
-        gmap.scatter([geolocator.geocode(country).latitude], [geolocator.geocode(country).longitude], colors[country], radius, marker=False)
-        gmap2.scatter([geolocator.geocode(country).latitude], [geolocator.geocode(country).longitude], 'FFF4500', str(country + " - " + countries[country] + " events"), marker=True)
-print('scattered')
-
-lats = []
-lons = []
-for coordinate in coords:
-    lats += [float(coordinate[0])]
-    lons += [float(coordinate[1])]
-print('got latlons')
-#gmap.heatmap(lats,lons)
-gmap.draw("../html/circleMap.html")
-gmap2.draw('../html/pinsMap.html')
-'''
 topCountries = []
 with open('../data/topOfMonth.csv', newline='') as top:
         reader = csv.reader(top, delimiter=',')
@@ -118,7 +47,7 @@ with open('../data/topOfMonth.csv', newline='') as top:
                 topCountries.append([row[0],row[1]])         
         except UnicodeDecodeError:
             pass
-print('got topofmonth')
+
 while(len(topCountries) < 10):
     topCountries.append(['---','---'])
 
@@ -131,17 +60,14 @@ with open('../data/languages.csv', newline='') as lang:
             welcome[row[0]] = row[1]
     except UnicodeDecodeError:
         pass
-print('got languages')
-states = 0
+
 with open('../data/states.csv', newline='') as states:
     reader = csv.reader(states, delimiter=",")
-    cont = True
+    state_count = 0
     for row in reader:
-        if(cont):
-            states = int(row[0])
-            cont = False
+        if(row[1] != "0" and row[1] != "Event Count"):
+	        state_count += 1
         
-print('got states')
 t = open('../html/Leaderboard-month.html','w')
 
 t.write("<!DOCTYPE html>\n")
@@ -223,7 +149,7 @@ t.write("	</table>")
 t.write("<html>")
 
 t.close()
-print('wrote monthtop')
+
 topAll = []
 
 with open('../data/topCountries.csv', newline='') as all:
@@ -234,7 +160,7 @@ with open('../data/topCountries.csv', newline='') as all:
                     topAll.append([row[1],row[0]])         
         except UnicodeDecodeError:
             pass
-print('read topofall')
+
 g = open('../html/Leaderboard.html','w')
 
 g.write("<!DOCTYPE html>\n")
@@ -254,7 +180,7 @@ g.write("<linktype='text/css' rel='stylesheet' href='Tablestyle.css'/>")
 g.write("	<table style='Border: Solid Black'>")
 g.write("		<thead>")
 g.write("			<tr>")
-g.write("				<th colspan='3'>"+str(states)+"/50 US States and "+str(len(topAll))+"/195 Countries<br /> have contributed to DECO<br /><br />Top Contributors of All Time</th>")
+g.write("				<th colspan='3'>"+str(state_count)+"/50 US States and "+str(len(topAll))+"/195 Countries<br /> have contributed to DECO<br /><br />Top Contributors of All Time</th>")
 g.write("			</tr>")
 g.write("			<tr style='border: 1px Solid Black'>")
 g.write("				<th>Rank  </th>")
@@ -273,7 +199,7 @@ for c in range(len(topAll)):
 g.write("		</thead>")
 g.write("	</table>")
 g.write("<html>")
-print('wrote topofall')
+
 g.close()
 newcountry = ""
 with open('../data/newCountries.csv', newline='') as new:
@@ -285,46 +211,9 @@ with open('../data/newCountries.csv', newline='') as new:
                         newcountry = row[0]      
         except UnicodeDecodeError:
             pass
-print('got newcountry')
-n = open('../html/welcome.html','w')
 
+n = open('../html/welcome.html','w')
 
 n.write("<!DOCTYPE html>\n")
 n.write('<html><h5 style="margin-bottom:5px;">'+welcome[newcountry]+' (Welcome) to the Newest Contributor:</h5><h3 style="display:inline;margin-left:40px">'+newcountry+'</h3>     <div style="display:inline-block;text-align: left;"><IMG style="width:55px;height:36px" SRC="../Flags/'+newcountry+'.png" ALT="image"></div><html>')
 n.close()
-print('wrote welcome')
-'''
-c_numero = []
-unique_pais = []
-for country in countries:
-	unique_pais.append(country)
-	c_numero.append(float(countries[country]))
-maximo = max(c_numero)
-cmap = mpl.cm.Blues
-test = 0
-shapename = 'admin_0_countries'
-countries_shp = shpreader.natural_earth(resolution='110m',category='cultural', name=shapename)
-fig = pl.figure()
-rect = 0.1, 0.1, 0.8, 0.8
-ax = fig.add_subplot(111, projection=ccrs.Robinson())
-for country in shpreader.Reader(countries_shp).records():
-    nome = country.attributes['name_long']
-    print(nome)
-    if nome in unique_pais:
-        i = unique_pais.index(nome)
-        numero = c_numero[i]
-        ax.add_geometries(country.geometry, ccrs.PlateCarree(),facecolor=cmap(math.sqrt(math.sqrt(numero / float(maximo))), 1.01),label=nome)
-        print("drew...")
-
-    else:
-        ax.add_geometries(country.geometry, ccrs.PlateCarree(),
-                              facecolor='#FAFAFA',
-                              label=nome)
-
-if test != len(unique_pais):
-    print("check the way you are writting your country names!")
-plt.show()
-plt.savefig('test.png')
-#mpld3.save_html(pl.gcf(),'countrymap.html')
-#mpimg.imsave("out.png", fig)'''
-print('done')

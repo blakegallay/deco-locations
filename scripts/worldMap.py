@@ -14,52 +14,95 @@ from bokeh.io import curdoc, output_notebook
 from bokeh.models import Slider, HoverTool
 from bokeh.layouts import widgetbox, row, column
 
-shapefile = '../misc/country_shapes/ne_110m_admin_0_countries.shp'
+def all_events_map():
 
-gdf = gpd.read_file(shapefile)[['ADMIN', 'ADM0_A3', 'geometry']]
+	shapefile = '../misc/country_shapes/ne_110m_admin_0_countries.shp'
 
-gdf.columns = ['country', 'country_code', 'geometry']
+	gdf = gpd.read_file(shapefile)[['ADMIN', 'ADM0_A3', 'geometry']]
 
-deco_countries_path = '../data/contributingCountries.csv'
+	gdf.columns = ['country', 'country_code', 'geometry']
 
-df = pd.read_csv(deco_countries_path, names=['events','percent', 'population', 'users'])
-df.index.name = 'country'
+	deco_countries_path = '../data/contributingCountries.csv'
 
-df.drop(['percent'], axis=1)
-df.drop(['population'], axis=1)
+	df = pd.read_csv(deco_countries_path, names=['events', 'users', 'classified'])
+	df.index.name = 'country'
 
+	merged = gdf.merge(df, left_on='country', right_on='country', how='left')
 
-merged = gdf.merge(df, left_on='country', right_on='country', how='left')
+	json_data = json.loads(merged.to_json())
 
-json_data = json.loads(merged.to_json())
+	json_data = json.dumps(json_data)
 
-json_data = json.dumps(json_data)
+	geosource = GeoJSONDataSource(geojson = json_data)
+	palette = brewer['YlGnBu'][8]
 
-geosource = GeoJSONDataSource(geojson = json_data)
-palette = brewer['YlGnBu'][8]
+	palette = palette[::-1]
 
-palette = palette[::-1]
+	color_mapper = LogColorMapper(palette = palette, low = 0, high = 300000)
 
-color_mapper = LogColorMapper(palette = palette, low = 0, high = 300000)
+	hover = HoverTool(tooltips = [ ('Country','@country'),('Total Events', '@events'),('Users', '@users')])
 
-hover = HoverTool(tooltips = [ ('Country','@country'),('Total Events', '@events'),('Users', '@users')])
+	p = figure(title='DECO Data Taking Locations', plot_height=600, plot_width=950, toolbar_location=None, tools=[hover])
+	p.xgrid.grid_line_color=None
+	p.ygrid.grid_line_color=None
 
-p = figure(title='DECO Data Taking Locations', plot_height=600, plot_width=950, toolbar_location=None, tools=[hover])
-p.xgrid.grid_line_color=None
-p.ygrid.grid_line_color=None
+	p.axis.visible = False
 
-p.axis.visible = False
+	p.patches('xs','ys', source = geosource,fill_color = {'field' :'events', 'transform' : color_mapper},
+			  line_color = 'black', line_width = 0.25, fill_alpha = 1)
 
-p.patches('xs','ys', source = geosource,fill_color = {'field' :'events', 'transform' : color_mapper},
-          line_color = 'black', line_width = 0.25, fill_alpha = 1)
+	output_file("../html/worldMap.html")	  
+			  
+	html = file_html(p, CDN, "map")
 
-output_file("../html/worldMap.html")	  
-		  
-html = file_html(p, CDN, "map")
+	show(p)
 
-show(p)
+def classified_events_map():
 
 	
+	shapefile = '../misc/country_shapes/ne_110m_admin_0_countries.shp'
+
+	gdf = gpd.read_file(shapefile)[['ADMIN', 'ADM0_A3', 'geometry']]
+
+	gdf.columns = ['country', 'country_code', 'geometry']
+
+	deco_countries_path = '../data/contributingCountries.csv'
+
+	df = pd.read_csv(deco_countries_path, names=['events', 'users', 'classified'])
+	df.index.name = 'country'
+
+	merged = gdf.merge(df, left_on='country', right_on='country', how='left')
+
+	json_data = json.loads(merged.to_json())
+
+	json_data = json.dumps(json_data)
+
+	geosource = GeoJSONDataSource(geojson = json_data)
+	palette = brewer['YlGnBu'][8]
+
+	palette = palette[::-1]
+
+	color_mapper = LogColorMapper(palette = palette, low = 0, high = 20000)
+
+	hover = HoverTool(tooltips = [ ('Country','@country'),('Classified Events', '@classified'),('Users', '@users')])
+
+	p = figure(title='DECO Data Taking Locations', plot_height=600, plot_width=950, toolbar_location=None, tools=[hover])
+	p.xgrid.grid_line_color=None
+	p.ygrid.grid_line_color=None
+
+	p.axis.visible = False
+
+	p.patches('xs','ys', source = geosource,fill_color = {'field' :'classified', 'transform' : color_mapper},
+			  line_color = 'black', line_width = 0.25, fill_alpha = 1)
+
+	output_file("../html/worldMap_classified.html")	  
+			  
+	html = file_html(p, CDN, "map")
+
+	show(p)
+
+all_events_map()
+classified_events_map()
 
 
 
